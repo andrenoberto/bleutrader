@@ -2,24 +2,24 @@ package account
 
 import (
 	"Bleu/packages"
-		"fmt"
+	"fmt"
 	"encoding/json"
 )
 
 type Response struct {
-	Success string `json:"success"`
-	Message string `json:"message"`
-	Result []Balance `json:"result"`
+	Success string    `json:"success"`
+	Message string    `json:"message"`
+	Result  []Balance `json:"result"`
 }
 
 type Balance struct {
-	Currency string
-	Balance string
-	Available string
-	Pending string
+	Currency      string
+	Balance       string
+	Available     string
+	Pending       string
 	CryptoAddress string
-	IsActive string
-	AllowDeposit string
+	IsActive      string
+	AllowDeposit  string
 	AllowWithdraw string
 }
 
