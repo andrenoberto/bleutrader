@@ -23,6 +23,7 @@ func MainMenu() {
 	fmt.Println("# 08 - Place Sell Order")
 	fmt.Println("# 09 - Place Buy Order")
 	fmt.Println("# 10 - Cancel an Order")
+	fmt.Println("# 11 - Check Open Orders")
 	fmt.Println("# Any other key to exit")
 	printMessage("Input bellow your action code")
 	var option uint8
@@ -155,6 +156,15 @@ func switchMenu(option uint8) {
 			printMessage("Order canceled successfully.")
 		} else {
 			printMessage(message)
+		}
+		backToMenu()
+	case 11:
+		orders := market.GetOpenOrders()
+		for index := range orders {
+			order := orders[index]
+			fmt.Printf("(%s - %s) ID: %d - Exchange: %s\nQty: %f - QtyRemaining: %f - QtyBaseTraded: %f - Price: %f\n\n",
+				order.Type, order.Status, order.OrderId, order.Exchange, order.Quantity, order.QuantityRemaining, order.QuantityBaseTraded,
+				order.Price)
 		}
 		backToMenu()
 	}

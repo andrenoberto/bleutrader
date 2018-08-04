@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"Bleu/services"
 	"strings"
-		)
+)
 
 type CancelOrderResponse struct {
 	services.Response
@@ -21,6 +21,24 @@ type PlaceOrderResponse struct {
 
 type PlaceOrder struct {
 	OrderId uint64 `json:"orderid,string"`
+}
+
+type OpenOrderResponse struct {
+	services.Response
+	Result []OpenOrder `json:"result"`
+}
+
+type OpenOrder struct {
+	OrderId            uint64 `json:",string"`
+	Exchange           string
+	Type               string
+	Quantity           float64 `json:",string"`
+	QuantityRemaining  float64 `json:",string"`
+	QuantityBaseTraded float64 `json:",string"`
+	Price              float64 `json:",string"`
+	Status             string
+	Created            string
+	Comments           string
 }
 
 const baseURI = "market"
@@ -80,4 +98,20 @@ func CancelOrder(orderId uint64) (bool, string) {
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&responseJson)
 	return responseJson.Success, responseJson.Message
+}
+
+func GetOpenOrders() []OpenOrder {
+	ordersURI := "/getopenorders"
+	signature, uri := packages.GetAPISign(baseURI + ordersURI)
+	req, err := http.NewRequest("GET", uri, nil)
+	packages.ErrorHandler(err)
+	req.Header.Set("Content-type", "application/json")
+	req.Header.Add("apisign", signature)
+	resp, err := http.DefaultClient.Do(req)
+	packages.ErrorHandler(err)
+	defer resp.Body.Close()
+	var responseJson OpenOrderResponse
+	decoder := json.NewDecoder(resp.Body)
+	decoder.Decode(&responseJson)
+	return responseJson.Result
 }
