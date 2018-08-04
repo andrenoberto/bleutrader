@@ -5,7 +5,8 @@ import (
 	"Bleu/services/account"
 	"Bleu/packages"
 	"Bleu/wallets"
-		)
+	"Bleu/services/public"
+)
 
 func MainMenu() {
 	packages.ClearScreen()
@@ -49,6 +50,14 @@ func switchMenu(option uint8) {
 			printMessage(message)
 		} else {
 			printMessage(message)
+		}
+		backToMenu()
+	case 4:
+		markets := public.GetMarkets()
+		for index := range markets {
+			market := markets[index]
+			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
+				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
 		}
 		backToMenu()
 	}
