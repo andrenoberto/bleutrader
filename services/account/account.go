@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-		"fmt"
+	"strings"
 )
 
 type Response struct {
@@ -27,7 +27,7 @@ type Balance struct {
 	Balance       float64 `json:",string"`
 	Available     float64 `json:",string"`
 	Pending       float64 `json:",string"`
-	CryptoAddress string
+	CryptoAddress string `json:",omitempty"`
 	IsActive      bool `json:",string"`
 	AllowDeposit  bool `json:",string"`
 	AllowWithdraw bool `json:",string"`
@@ -52,6 +52,7 @@ func GetBalances() []Balance {
 }
 
 func GetBalanceByCurrency(currencyName string) Balance {
+	currencyName = strings.ToUpper(currencyName)
 	balances := GetBalances()
 	for index := range balances {
 		if balances[index].Currency == currencyName {
