@@ -2,8 +2,8 @@ package account
 
 import (
 	"Bleu/packages"
-	"fmt"
-	"encoding/json"
+		"encoding/json"
+		"net/http"
 )
 
 type BalanceResponse struct {
@@ -14,13 +14,13 @@ type BalanceResponse struct {
 
 type Balance struct {
 	Currency      string
-	Balance       string
-	Available     string
-	Pending       string
+	Balance       float64
+	Available     float64
+	Pending       float64
 	CryptoAddress string
-	IsActive      string
-	AllowDeposit  string
-	AllowWithdraw string
+	IsActive      bool
+	AllowDeposit  bool
+	AllowWithdraw bool
 }
 
 const baseURI = "account"
@@ -28,10 +28,20 @@ const baseURI = "account"
 func GetBalances() []Balance {
 	balanceURI := "/getbalances"
 	signature, uri := packages.GetAPISign(baseURI + balanceURI)
-	response := packages.RequestHandler("GET", uri, nil, signature)
-	var responseJson BalanceResponse
-	err := json.Unmarshal(response, &responseJson)
+	req, err := http.NewRequest("GET", uri, nil)
 	packages.ErrorHandler(err)
-	fmt.Println(responseJson.Result[0])
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("apisign", signature)
+	resp, err := http.DefaultClient.Do(req)
+	packages.ErrorHandler(err)
+	defer resp.Body.Close()
+	var responseJson BalanceResponse
+	decoder := json.NewDecoder(resp.Body)
+	decoder.Decode(&responseJson)
 	return responseJson.Result
 }
+
+/*func Withdraw() {
+	withdrawURI := "/withdraw"
+	signature, uri := paca
+}*/

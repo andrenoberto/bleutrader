@@ -1,7 +1,11 @@
 package main
 
-import "Bleu/services/account"
+import (
+	"Bleu/services/account"
+	"fmt"
+)
 
 func main() {
-	_ = account.GetBalances()
+	balances := account.GetBalances()
+	fmt.Println(balances)
 }
