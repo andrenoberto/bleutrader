@@ -14,7 +14,7 @@ func MainMenu() {
 	fmt.Println("# 2 - Get Balance by Currency")
 	fmt.Println("# 3 - Make Withdraw")
 	fmt.Println("# Any other key to exit")
-	printMessage("Input bellow your action")
+	printMessage("Input bellow your action code")
 	var option uint8
 	fmt.Scanf("%d", &option)
 	switchMenu(option)
@@ -28,8 +28,8 @@ func switchMenu(option uint8) {
 		for index := range balances {
 			balance := balances[index]
 			fmt.Printf("Currency: %s - Available: %f - Address: %s\n", balance.Currency, balance.Available, balance.CryptoAddress)
-			backToMenu()
 		}
+		backToMenu()
 	case 2:
 		var currencyName string
 		printMessage("Input the currency code")
@@ -40,7 +40,11 @@ func switchMenu(option uint8) {
 		fmt.Printf("Currency: %s\nAvailable: %f\nAddress: %s\n", balance.Currency, balance.Available, balance.CryptoAddress)
 		backToMenu()
 	case 3:
-		if success, message := account.Withdraw("DOGE", 1, wallets.Doge); success {
+		var amountValue float64
+		printMessage("Input the amount of DOGE to transfer")
+		fmt.Scanln(&amountValue)
+		fmt.Scanf("%f", &amountValue)
+		if success, message := account.Withdraw("DOGE", amountValue, wallets.Doge); success {
 			printMessage(message)
 		} else {
 			printMessage(message)
@@ -58,6 +62,7 @@ func printMessage(message string) {
 func backToMenu() {
 	var input string
 	printMessage("Press any key to go back to Main Menu")
+	fmt.Scanln(&input)
 	fmt.Scanf("%s", &input)
 	MainMenu()
 }
