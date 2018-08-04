@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
-	balances := account.GetBalances()
-	fmt.Println(balances)
+	btc := account.GetBalanceByCurrency("BTC")
+	fmt.Println(btc)
+	account.Withdraw("BTC", 0.001, "1AqABNPPPurq8Sy6RuxWkjRHdNLNzaR1bZ")
 }

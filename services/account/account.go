@@ -2,13 +2,19 @@ package account
 
 import (
 	"Bleu/packages"
-		"encoding/json"
-		"net/http"
+	"encoding/json"
+	"net/http"
+	"strconv"
+	"io/ioutil"
+	"fmt"
 )
 
-type BalanceResponse struct {
+type Response struct {
 	Success string    `json:"success"`
 	Message string    `json:"message"`
+}
+type BalanceResponse struct {
+	Response
 	Result  []Balance `json:"result"`
 }
 
@@ -41,7 +47,33 @@ func GetBalances() []Balance {
 	return responseJson.Result
 }
 
-/*func Withdraw() {
+func GetBalanceByCurrency(currencyName string) Balance {
+	balances := GetBalances()
+	for index := range balances {
+		if balances[index].Currency == currencyName {
+			return balances[index]
+		}
+	}
+	return Balance{}
+}
+
+func Withdraw(currency string, quantity float64, address string) {
 	withdrawURI := "/withdraw"
-	signature, uri := paca
-}*/
+	params := "?currency=" + currency
+	params += "&quantity=" + strconv.FormatFloat(quantity, 'f', -1, 64)
+	params += "&address=" + address
+	signature, uri := packages.GetAPISign(baseURI + withdrawURI + params)
+	req, err := http.NewRequest("GET", uri, nil)
+	packages.ErrorHandler(err)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Add("apisign", signature)
+	resp, err := http.DefaultClient.Do(req)
+	packages.ErrorHandler(err)
+	defer resp.Body.Close()
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(body))
+	/*var responseJson BalanceResponse
+	decoder := json.NewDecoder(resp.Body)
+	decoder.Decode(&responseJson)
+	fmt.Println(responseJson)*/
+}
