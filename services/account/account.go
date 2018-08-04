@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 )
 
-type Response struct {
+type BalanceResponse struct {
 	Success string    `json:"success"`
 	Message string    `json:"message"`
 	Result  []Balance `json:"result"`
@@ -29,7 +29,7 @@ func GetBalances() {
 	balanceURI := "/getbalances"
 	signature, uri := packages.GetAPISign(baseURI + balanceURI)
 	response := packages.RequestHandler("GET", uri, nil, signature)
-	var responseJson Response
+	var responseJson BalanceResponse
 	err := json.Unmarshal(response, &responseJson)
 	packages.ErrorHandler(err)
 	fmt.Println(responseJson.Result[0])
