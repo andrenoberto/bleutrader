@@ -6,18 +6,23 @@ import (
 	"Bleu/packages"
 	"Bleu/wallets"
 	"Bleu/services/public"
+	"Bleu/services/market"
+	"strconv"
 )
 
 func MainMenu() {
 	packages.ClearScreen()
 	fmt.Println("########################################################################")
-	fmt.Println("# 1 - Get All Balances")
-	fmt.Println("# 2 - Get Balance by Currency")
-	fmt.Println("# 3 - Make Withdraw")
-	fmt.Println("# 4 - See Markets")
-	fmt.Println("# 5 - Get Market by Market Currency")
-	fmt.Println("# 6 - Get Market by Market Base")
-	fmt.Println("# 7 - Get Market by Market Name")
+	fmt.Println("# 01 - Get All Balances")
+	fmt.Println("# 02 - Get Balance by Currency")
+	fmt.Println("# 03 - Make Withdraw")
+	fmt.Println("# 04 - See Markets")
+	fmt.Println("# 05 - Get Market by Market Currency")
+	fmt.Println("# 06 - Get Market by Market Base")
+	fmt.Println("# 07 - Get Market by Market Name")
+	fmt.Println("# 08 - Place Sell Order")
+	fmt.Println("# 09 - Place Buy Order")
+	fmt.Println("# 10 - Cancel an Order")
 	fmt.Println("# Any other key to exit")
 	printMessage("Input bellow your action code")
 	var option uint8
@@ -58,9 +63,9 @@ func switchMenu(option uint8) {
 	case 4:
 		markets := public.GetMarkets()
 		for index := range markets {
-			market := markets[index]
+			marketItem := markets[index]
 			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
-				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+				marketItem.MarketCurrency, marketItem.BaseCurrency, marketItem.MinTradeSize, marketItem.MarketName)
 		}
 		backToMenu()
 	case 5:
@@ -71,9 +76,9 @@ func switchMenu(option uint8) {
 		markets := public.GetMarketsByMarketCurrency(marketCurrency)
 		packages.ClearScreen()
 		for index := range markets {
-			market := markets[index]
+			marketItem := markets[index]
 			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
-				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+				marketItem.MarketCurrency, marketItem.BaseCurrency, marketItem.MinTradeSize, marketItem.MarketName)
 		}
 		backToMenu()
 	case 6:
@@ -84,9 +89,9 @@ func switchMenu(option uint8) {
 		markets := public.GetMarketsByBaseCurrency(marketBase)
 		packages.ClearScreen()
 		for index := range markets {
-			market := markets[index]
+			marketItem := markets[index]
 			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
-				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+				marketItem.MarketCurrency, marketItem.BaseCurrency, marketItem.MinTradeSize, marketItem.MarketName)
 		}
 		backToMenu()
 	case 7:
@@ -94,10 +99,63 @@ func switchMenu(option uint8) {
 		printMessage("Input the Market Name CODE")
 		fmt.Scanln(&marketName)
 		fmt.Scanf("%s", &marketName)
-		market := public.GetMarketByMarketName(marketName)
+		marketItem := public.GetMarketByMarketName(marketName)
 		packages.ClearScreen()
 		fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
-			market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+			marketItem.MarketCurrency, marketItem.BaseCurrency, marketItem.MinTradeSize, marketItem.MarketName)
+		backToMenu()
+	case 8:
+		var marketName string
+		var rate float64
+		var quantity float64
+		printMessage("Input the Market Name CODE")
+		fmt.Scanln(&marketName)
+		fmt.Scanf("%s", &marketName)
+		packages.ClearScreen()
+		printMessage("Input the rate")
+		fmt.Scanln(&rate)
+		fmt.Scanf("%f", &rate)
+		packages.ClearScreen()
+		printMessage("Input the quantity")
+		fmt.Scanln(&quantity)
+		fmt.Scanf("%f", &quantity)
+		if success, order := market.PlaceSellOrder(marketName, rate, quantity); success {
+			printMessage("Placed sell order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
+		} else {
+			printMessage(order.Message)
+		}
+		backToMenu()
+	case 9:
+		var marketName string
+		var rate float64
+		var quantity float64
+		printMessage("Input the Market Name CODE")
+		fmt.Scanln(&marketName)
+		fmt.Scanf("%s", &marketName)
+		packages.ClearScreen()
+		printMessage("Input the rate")
+		fmt.Scanln(&rate)
+		fmt.Scanf("%f", &rate)
+		packages.ClearScreen()
+		printMessage("Input the quantity")
+		fmt.Scanln(&quantity)
+		fmt.Scanf("%f", &quantity)
+		if success, order := market.PlaceBuyOrder(marketName, rate, quantity); success {
+			printMessage("Placed buy order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
+		} else {
+			printMessage(order.Message)
+		}
+		backToMenu()
+	case 10:
+		var orderId uint64
+		printMessage("Input the ORDER ID")
+		fmt.Scanln(&orderId)
+		fmt.Scanf("%d", &orderId)
+		if success, message := market.CancelOrder(orderId); success {
+			printMessage("Order canceled successfully.")
+		} else {
+			printMessage(message)
+		}
 		backToMenu()
 	}
 }
