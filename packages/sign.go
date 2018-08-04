@@ -19,11 +19,15 @@ func createHash(s string) string {
 	return encodedHash
 }
 
-func GetAPISign(s string) (string, string) {
+func GetAPISign(s ...string) (string, string) {
 	var (
 		nonce = strconv.FormatInt(time.Now().UnixNano(), 10)
-		uri   = environment.RootUrl + s + "?apikey=" + environment.ApiKey + "&nonce=" + string(nonce)
+		uri   = environment.RootUrl + s[0] + "?apikey=" + environment.ApiKey
 	)
+	uri += "&nonce=" + string(nonce)
+	if len(s) > 1 && len(s[1]) > 0 {
+		uri += s[1]
+	}
 	signature := createHash(uri)
 	return signature, uri
 }
