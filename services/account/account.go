@@ -25,7 +25,7 @@ type Balance struct {
 
 const baseURI = "account"
 
-func GetBalances() {
+func GetBalances() []Balance {
 	balanceURI := "/getbalances"
 	signature, uri := packages.GetAPISign(baseURI + balanceURI)
 	response := packages.RequestHandler("GET", uri, nil, signature)
@@ -33,4 +33,5 @@ func GetBalances() {
 	err := json.Unmarshal(response, &responseJson)
 	packages.ErrorHandler(err)
 	fmt.Println(responseJson.Result[0])
+	return responseJson.Result
 }
