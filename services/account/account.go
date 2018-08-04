@@ -61,7 +61,7 @@ func GetBalanceByCurrency(currencyName string) Balance {
 	return Balance{}
 }
 
-func Withdraw(currency string, quantity float64, address string) {
+func Withdraw(currency string, quantity float64, address string) (bool, string) {
 	withdrawURI := "/withdraw"
 	params := "&currency=" + currency
 	params += "&quantity=" + strconv.FormatFloat(quantity, 'f', -1, 64)
@@ -71,12 +71,11 @@ func Withdraw(currency string, quantity float64, address string) {
 	packages.ErrorHandler(err)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("apisign", signature)
-	fmt.Printf("\nURI: %s \nSignature: %s\n", uri, signature)
 	resp, err := http.DefaultClient.Do(req)
 	packages.ErrorHandler(err)
 	defer resp.Body.Close()
 	var responseJson BalanceResponse
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&responseJson)
-	fmt.Println(responseJson)
+	return responseJson.Success, responseJson.Message
 }

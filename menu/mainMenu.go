@@ -36,8 +36,11 @@ func switchMenu(option uint8) {
 		balance := account.GetBalanceByCurrency("DOGE")
 		fmt.Println(balance)
 	case 3:
-		/*withdraw := */account.Withdraw("DOGE", 11, wallets.Doge)
-		//fmt.Println(withdraw)
+		if success, message := account.Withdraw("DOGE", 1, wallets.Doge); success {
+			printMessage(message)
+		} else {
+			printMessage(message)
+		}
 	}
 }
 
