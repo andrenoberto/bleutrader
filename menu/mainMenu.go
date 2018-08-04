@@ -13,6 +13,7 @@ func MainMenu() {
 	fmt.Println("# 1 - Get All Balances")
 	fmt.Println("# 2 - Get Balance by Currency")
 	fmt.Println("# 3 - Make Withdraw")
+	fmt.Println("# 4 - See Markets")
 	fmt.Println("# Any other key to exit")
 	printMessage("Input bellow your action code")
 	var option uint8

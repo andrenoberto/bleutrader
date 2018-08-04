@@ -6,19 +6,16 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"Bleu/services"
 )
 
-type Response struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
-}
 type BalanceResponse struct {
-	Response
+	services.Response
 	Result []Balance `json:"result"`
 }
 
 type WithdrawResponse struct {
-	Response
+	services.Response
 	Result []string `json:"result"`
 }
 
@@ -27,10 +24,10 @@ type Balance struct {
 	Balance       float64 `json:",string"`
 	Available     float64 `json:",string"`
 	Pending       float64 `json:",string"`
-	CryptoAddress string `json:",omitempty"`
-	IsActive      bool `json:",string"`
-	AllowDeposit  bool `json:",string"`
-	AllowWithdraw bool `json:",string"`
+	CryptoAddress string
+	IsActive      bool    `json:",string"`
+	AllowDeposit  bool    `json:",string"`
+	AllowWithdraw bool    `json:",string"`
 }
 
 const baseURI = "account"
