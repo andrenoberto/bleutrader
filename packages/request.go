@@ -16,5 +16,5 @@ func RequestHandler(method string, uri string, body io.Reader, signature string)
 	defer resp.Body.Close()
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	ErrorHandler(err)
-	return []byte("[" + string(responseBody) + "]")
+	return []byte(string(responseBody))
 }

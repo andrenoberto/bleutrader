@@ -29,8 +29,8 @@ func GetBalances() {
 	balanceURI := "/getbalances"
 	signature, uri := packages.GetAPISign(baseURI + balanceURI)
 	response := packages.RequestHandler("GET", uri, nil, signature)
-	var responseJson []Response
+	var responseJson Response
 	err := json.Unmarshal(response, &responseJson)
 	packages.ErrorHandler(err)
-	fmt.Println(responseJson)
+	fmt.Println(responseJson.Result[0])
 }
