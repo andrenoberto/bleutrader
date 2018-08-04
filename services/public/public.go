@@ -5,7 +5,8 @@ import (
 	"Bleu/packages"
 	"net/http"
 	"encoding/json"
-		)
+	"strings"
+)
 
 type MarketResponse struct {
 	services.Response
@@ -38,4 +39,39 @@ func GetMarkets() []Market {
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&responseJson)
 	return responseJson.Result
+}
+
+func GetMarketsByMarketCurrency(marketCurrency string) []Market {
+	filteredMarkets := make([]Market, 0)
+	marketCurrency = strings.ToUpper(marketCurrency)
+	markets := GetMarkets()
+	for index := range markets {
+		if markets[index].MarketCurrency == marketCurrency {
+			filteredMarkets = append(filteredMarkets, markets[index])
+		}
+	}
+	return filteredMarkets
+}
+
+func GetMarketsByBaseCurrency(baseCurrency string) []Market {
+	filteredMarkets := make([]Market, 0)
+	baseCurrency = strings.ToUpper(baseCurrency)
+	markets := GetMarkets()
+	for index := range markets {
+		if markets[index].BaseCurrency == baseCurrency {
+			filteredMarkets = append(filteredMarkets, markets[index])
+		}
+	}
+	return filteredMarkets
+}
+
+func GetMarketByMarketName(marketName string) Market {
+	marketName = strings.ToUpper(marketName)
+	markets := GetMarkets()
+	for index := range markets {
+		if markets[index].MarketName == marketName {
+			return markets[index]
+		}
+	}
+	return Market{}
 }

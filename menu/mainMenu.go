@@ -15,6 +15,9 @@ func MainMenu() {
 	fmt.Println("# 2 - Get Balance by Currency")
 	fmt.Println("# 3 - Make Withdraw")
 	fmt.Println("# 4 - See Markets")
+	fmt.Println("# 5 - Get Market by Market Currency")
+	fmt.Println("# 6 - Get Market by Market Base")
+	fmt.Println("# 7 - Get Market by Market Name")
 	fmt.Println("# Any other key to exit")
 	printMessage("Input bellow your action code")
 	var option uint8
@@ -34,7 +37,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 2:
 		var currencyName string
-		printMessage("Input the currency code")
+		printMessage("Input the currency CODE")
 		fmt.Scanln(&currencyName)
 		fmt.Scanf("%s", &currencyName)
 		balance := account.GetBalanceByCurrency(currencyName)
@@ -59,6 +62,42 @@ func switchMenu(option uint8) {
 			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
 				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
 		}
+		backToMenu()
+	case 5:
+		var marketCurrency string
+		printMessage("Input the Market Currency")
+		fmt.Scanln(&marketCurrency)
+		fmt.Scanf("%s", &marketCurrency)
+		markets := public.GetMarketsByMarketCurrency(marketCurrency)
+		packages.ClearScreen()
+		for index := range markets {
+			market := markets[index]
+			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
+				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+		}
+		backToMenu()
+	case 6:
+		var marketBase string
+		printMessage("Input the Market Base")
+		fmt.Scanln(&marketBase)
+		fmt.Scanf("%s", &marketBase)
+		markets := public.GetMarketsByBaseCurrency(marketBase)
+		packages.ClearScreen()
+		for index := range markets {
+			market := markets[index]
+			fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
+				market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
+		}
+		backToMenu()
+	case 7:
+		var marketName string
+		printMessage("Input the Market Name CODE")
+		fmt.Scanln(&marketName)
+		fmt.Scanf("%s", &marketName)
+		market := public.GetMarketByMarketName(marketName)
+		packages.ClearScreen()
+		fmt.Printf("Market: %s - Base: %s - Min. Trade: %f - Market Name: %s\n",
+			market.MarketCurrency, market.BaseCurrency, market.MinTradeSize, market.MarketName)
 		backToMenu()
 	}
 }
