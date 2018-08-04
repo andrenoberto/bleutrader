@@ -5,8 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"strconv"
-	"io/ioutil"
-	"fmt"
+		"fmt"
 )
 
 type Response struct {
@@ -76,10 +75,8 @@ func Withdraw(currency string, quantity float64, address string) {
 	resp, err := http.DefaultClient.Do(req)
 	packages.ErrorHandler(err)
 	defer resp.Body.Close()
-	body, _ := ioutil.ReadAll(resp.Body)
-	fmt.Println(string(body))
-	/*var responseJson BalanceResponse
+	var responseJson BalanceResponse
 	decoder := json.NewDecoder(resp.Body)
 	decoder.Decode(&responseJson)
-	fmt.Println(responseJson)*/
+	fmt.Println(responseJson)
 }
