@@ -25,9 +25,9 @@ type Balance struct {
 	Available     float64 `json:",string"`
 	Pending       float64 `json:",string"`
 	CryptoAddress string
-	IsActive      bool    `json:",string"`
-	AllowDeposit  bool    `json:",string"`
-	AllowWithdraw bool    `json:",string"`
+	IsActive      bool `json:",string"`
+	AllowDeposit  bool `json:",string"`
+	AllowWithdraw bool `json:",string"`
 }
 
 const baseURI = "account"
