@@ -175,6 +175,7 @@ func switchMenu(option uint8) {
 		fmt.Scanln(&hash)
 		fmt.Scanf("%s", &hash)
 		reader.GetMessageByHash(hash)
+		backToMenu()
 	}
 }
 
