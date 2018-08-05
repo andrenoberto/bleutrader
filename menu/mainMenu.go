@@ -171,7 +171,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 12:
 		var hash string
-		PrintMessage("Input the Hash")
+		PrintMessage("Input the Ethereum Transaction Hash")
 		fmt.Scanln(&hash)
 		fmt.Scanf("%s", &hash)
 		reader.GetMessageByHash(hash)
