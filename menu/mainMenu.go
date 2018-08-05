@@ -8,6 +8,7 @@ import (
 	"Bleu/services/public"
 	"Bleu/services/market"
 	"strconv"
+	"Bleu/reader"
 )
 
 func MainMenu() {
@@ -24,8 +25,9 @@ func MainMenu() {
 	fmt.Println("# 09 - Place Buy Order")
 	fmt.Println("# 10 - Cancel an Order")
 	fmt.Println("# 11 - Check Open Orders")
+	fmt.Println("# 12 - Read Ethereum Transaction")
 	fmt.Println("# Any other key to exit")
-	printMessage("Input bellow your action code")
+	PrintMessage("Input bellow your action code")
 	var option uint8
 	fmt.Scanf("%d", &option)
 	switchMenu(option)
@@ -43,7 +45,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 2:
 		var currencyName string
-		printMessage("Input the currency CODE")
+		PrintMessage("Input the currency CODE")
 		fmt.Scanln(&currencyName)
 		fmt.Scanf("%s", &currencyName)
 		balance := account.GetBalanceByCurrency(currencyName)
@@ -52,13 +54,13 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 3:
 		var amountValue float64
-		printMessage("Input the amount of DOGE to transfer")
+		PrintMessage("Input the amount of DOGE to transfer")
 		fmt.Scanln(&amountValue)
 		fmt.Scanf("%f", &amountValue)
 		if success, message := account.Withdraw("DOGE", amountValue, wallets.Doge); success {
-			printMessage(message)
+			PrintMessage(message)
 		} else {
-			printMessage(message)
+			PrintMessage(message)
 		}
 		backToMenu()
 	case 4:
@@ -71,7 +73,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 5:
 		var marketCurrency string
-		printMessage("Input the Market Currency")
+		PrintMessage("Input the Market Currency")
 		fmt.Scanln(&marketCurrency)
 		fmt.Scanf("%s", &marketCurrency)
 		markets := public.GetMarketsByMarketCurrency(marketCurrency)
@@ -84,7 +86,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 6:
 		var marketBase string
-		printMessage("Input the Market Base")
+		PrintMessage("Input the Market Base")
 		fmt.Scanln(&marketBase)
 		fmt.Scanf("%s", &marketBase)
 		markets := public.GetMarketsByBaseCurrency(marketBase)
@@ -97,7 +99,7 @@ func switchMenu(option uint8) {
 		backToMenu()
 	case 7:
 		var marketName string
-		printMessage("Input the Market Name CODE")
+		PrintMessage("Input the Market Name CODE")
 		fmt.Scanln(&marketName)
 		fmt.Scanf("%s", &marketName)
 		marketItem := public.GetMarketByMarketName(marketName)
@@ -109,53 +111,53 @@ func switchMenu(option uint8) {
 		var marketName string
 		var rate float64
 		var quantity float64
-		printMessage("Input the Market Name CODE")
+		PrintMessage("Input the Market Name CODE")
 		fmt.Scanln(&marketName)
 		fmt.Scanf("%s", &marketName)
 		packages.ClearScreen()
-		printMessage("Input the rate")
+		PrintMessage("Input the rate")
 		fmt.Scanln(&rate)
 		fmt.Scanf("%f", &rate)
 		packages.ClearScreen()
-		printMessage("Input the quantity")
+		PrintMessage("Input the quantity")
 		fmt.Scanln(&quantity)
 		fmt.Scanf("%f", &quantity)
 		if success, order := market.PlaceSellOrder(marketName, rate, quantity); success {
-			printMessage("Placed sell order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
+			PrintMessage("Placed sell order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
 		} else {
-			printMessage(order.Message)
+			PrintMessage(order.Message)
 		}
 		backToMenu()
 	case 9:
 		var marketName string
 		var rate float64
 		var quantity float64
-		printMessage("Input the Market Name CODE")
+		PrintMessage("Input the Market Name CODE")
 		fmt.Scanln(&marketName)
 		fmt.Scanf("%s", &marketName)
 		packages.ClearScreen()
-		printMessage("Input the rate")
+		PrintMessage("Input the rate")
 		fmt.Scanln(&rate)
 		fmt.Scanf("%f", &rate)
 		packages.ClearScreen()
-		printMessage("Input the quantity")
+		PrintMessage("Input the quantity")
 		fmt.Scanln(&quantity)
 		fmt.Scanf("%f", &quantity)
 		if success, order := market.PlaceBuyOrder(marketName, rate, quantity); success {
-			printMessage("Placed buy order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
+			PrintMessage("Placed buy order with ID: " + strconv.FormatUint(order.Result.OrderId, 10))
 		} else {
-			printMessage(order.Message)
+			PrintMessage(order.Message)
 		}
 		backToMenu()
 	case 10:
 		var orderId uint64
-		printMessage("Input the ORDER ID")
+		PrintMessage("Input the ORDER ID")
 		fmt.Scanln(&orderId)
 		fmt.Scanf("%d", &orderId)
 		if success, message := market.CancelOrder(orderId); success {
-			printMessage("Order canceled successfully.")
+			PrintMessage("Order canceled successfully.")
 		} else {
-			printMessage(message)
+			PrintMessage(message)
 		}
 		backToMenu()
 	case 11:
@@ -167,10 +169,16 @@ func switchMenu(option uint8) {
 				order.Price)
 		}
 		backToMenu()
+	case 12:
+		var hash string
+		PrintMessage("Input the Hash")
+		fmt.Scanln(&hash)
+		fmt.Scanf("%s", &hash)
+		reader.GetMessageByHash(hash)
 	}
 }
 
-func printMessage(message string) {
+func PrintMessage(message string) {
 	fmt.Println("########################################################################")
 	fmt.Println("#", message)
 	fmt.Println("########################################################################")
@@ -178,7 +186,7 @@ func printMessage(message string) {
 
 func backToMenu() {
 	var input string
-	printMessage("Press any key to go back to Main Menu")
+	PrintMessage("Press any key to go back to Main Menu")
 	fmt.Scanln(&input)
 	fmt.Scanf("%s", &input)
 	MainMenu()

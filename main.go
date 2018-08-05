@@ -1,6 +1,8 @@
 package main
 
-import "Bleu/menu"
+import (
+		"Bleu/menu"
+)
 
 func main() {
 	menu.MainMenu()
