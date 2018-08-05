@@ -1,7 +1,7 @@
 package main
 
 import (
-		"Bleu/menu"
+	"Bleu/menu"
 )
 
 func main() {

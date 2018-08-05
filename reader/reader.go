@@ -6,7 +6,6 @@ import (
 	"github.com/st3v/translator/google"
 	"Bleu/environment"
 	"fmt"
-	"Bleu/menu"
 	"Bleu/packages"
 	"net/http"
 	"encoding/json"
@@ -52,7 +51,9 @@ func GetMessageByHash(hash string) {
 }
 
 func translateHex(message string) {
-	menu.PrintMessage("Translating...")
+	fmt.Println("########################################################################")
+	fmt.Println("# Translating...")
+	fmt.Println("########################################################################")
 	// Decoding message
 	decoded, err := hex.DecodeString(message)
 	if err != nil {
@@ -70,6 +71,8 @@ func translateHex(message string) {
 			init = index
 		}
 	}
+	// Add last paragraph
+	paragraphs = append(paragraphs, decodedText[init:])
 	translator := google.NewTranslator(environment.GoogleTranslateApiKey)
 	languageCode, err := translator.Detect(paragraphs[0])
 	if err != nil {
